@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "ID": 0,
+      "promo_code": "EZ10",
+      "discount": "10",
+      "expiry": "No Expiry",
+      "notice": "This code would be valid and no expiry right now."
+    },
+    {
+      "ID": 1,
+      "promo_code": "EZFRIEND20",
+      "discount": "20",
+      "expiry": "No Expiry",
+      "notice": "This code would be valid and no expiry right now."
+    },
+    {
+      "ID": 2,
+      "promo_code": "EZFAN30",
+      "discount": "30",
+      "expiry": "No Expiry",
+      "notice": "This code would be valid and no expiry right now."
+    },
+    {
+      "ID": 3,
+      "promo_code": "EZPREMIUM50",
+      "discount": "50",
+      "expiry": "No Expiry",
+      "notice": "This code would be valid and no expiry right now."
+    }
+  ]
+}

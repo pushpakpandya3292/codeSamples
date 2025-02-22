@@ -1,0 +1,18 @@
+<svg
+          width="31"
+          height="16"
+          viewBox="0 0 31 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="31" height="2.5" rx="1.25" fill="#535F6B" />
+          <rect y="4.5" width="18.9444" height="2.5" rx="1.25" fill="#535F6B" />
+          <rect y="9" width="31" height="2.5" rx="1.25" fill="#535F6B" />
+          <rect
+            y="13.5"
+            width="18.9444"
+            height="2.5"
+            rx="1.25"
+            fill="#535F6B"
+          />
+        </svg>

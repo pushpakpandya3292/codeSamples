@@ -1,0 +1,309 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid          String  @id @map("_id")
+  fullName     String
+  email        String  @unique
+  phone        String?
+  phoneCountry String?
+  photo        String?
+  country      String?
+  linkedin     String?
+  customerId   String?
+  roles        Role[]  @default([user])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courses          Course[]
+  enrollments      Enrollment[]
+  applications     Application[]
+  blogs            Blog[]
+  blogComments     BlogComment[]
+  blogCommentLikes BlogCommentLike[]
+
+  watchedPixelVideo  Boolean @default(false)
+  watchedPixelWinner Boolean @default(false)
+}
+
+model Course {
+  uid           String @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String
+  thumbnail     String
+  price         Float
+  ordinaryPrice Float?
+  category      String
+  instructor    User   @relation(fields: [instructorId], references: [uid], onDelete: NoAction)
+  instructorId  String
+
+  vimeoFolder String
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapters              Chapter[]
+  enrollments           Enrollment[]
+  positionsDepending    Position[]   @relation(fields: [positionsDependingIds], references: [uid])
+  positionsDependingIds String[]     @db.ObjectId
+}
+
+model Chapter {
+  uid      String @id @default(auto()) @map("_id") @db.ObjectId
+  number   Int
+  title    String
+  course   Course @relation(fields: [courseId], references: [uid], onDelete: Cascade)
+  courseId String @db.ObjectId
+
+  vimeoFolder String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  uid       String  @id @default(auto()) @map("_id") @db.ObjectId
+  number    Int
+  title     String
+  source    String
+  duration  Int
+  chapter   Chapter @relation(fields: [chapterId], references: [uid], onDelete: Cascade)
+  chapterId String  @db.ObjectId
+
+  vimeoUri String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Enrollment {
+  uid         String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation(fields: [userId], references: [uid], onDelete: NoAction)
+  userId      String
+  course      Course   @relation(fields: [courseId], references: [uid], onDelete: Cascade)
+  courseId    String   @db.ObjectId
+  progress    String[]
+  certificate String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Position {
+  uid              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  description      String
+  type             PositionType
+  salaryFrom       Int
+  salaryTo         Int
+  tags             String[]
+  requirements     String
+  responsibilities String
+
+  requiredCourses    Course[] @relation(fields: [requiredCoursesIds], references: [uid])
+  requiredCoursesIds String[] @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicantTasks ApplicantTasks?
+  applications   Application[]
+}
+
+model Application {
+  uid                 String                @id @default(auto()) @map("_id") @db.ObjectId
+  user                User                  @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  userId              String
+  position            Position              @relation(fields: [positionId], references: [uid], onDelete: Cascade)
+  positionId          String                @db.ObjectId
+  status              ApplicationStatus     @default(incomplete)
+  personalInformation PersonalInformation
+  educationBackground EducationBackground[]
+  workExperience      WorkExperience[]
+  github              String?
+  skills              SkillsRating[]
+  answeredTasks       AnsweredTasks[]
+  resume              String?
+  submitted           Boolean               @default(false)
+  signedContract      String?
+  contractStatus      ContractStatus?
+
+  interviewed    Boolean        @default(false)
+  interviewNotes String?
+  adminRatings   SkillsRating[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApplicantTasks {
+  uid        String      @id @default(auto()) @map("_id") @db.ObjectId
+  position   Position    @relation(fields: [positionId], references: [uid], onDelete: Cascade)
+  positionId String      @unique @db.ObjectId
+  tasks      TasksType[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Blog {
+  uid           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  introduction  String
+  content       String
+  featuredImage String
+  tags          String[]
+  category      String
+  author        User     @relation(fields: [authorId], references: [uid])
+  authorId      String
+
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comments BlogComment[]
+}
+
+model BlogComment {
+  uid     String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  user    User   @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  userId  String
+  blog    Blog   @relation(fields: [blogId], references: [uid], onDelete: Cascade)
+  blogId  String @db.ObjectId
+
+  replyToId String?       @db.ObjectId
+  replyTo   BlogComment?  @relation("ReplyTo", fields: [replyToId], references: [uid], onDelete: NoAction, onUpdate: NoAction)
+  replies   BlogComment[] @relation("ReplyTo")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  likes BlogCommentLike[]
+}
+
+model BlogCommentLike {
+  uid       String      @id @default(auto()) @map("_id") @db.ObjectId
+  user      User        @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  userId    String
+  comment   BlogComment @relation(fields: [commentId], references: [uid], onDelete: Cascade)
+  commentId String      @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SsoApp {
+  clientId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  logo         String
+  clientSecret String   @unique
+  redirectUris String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  user
+  blogger
+  recruiter
+  instructor
+  admin
+}
+
+enum PositionType {
+  job
+  internship
+}
+
+enum ApplicationStatus {
+  incomplete
+  pending
+  accepted
+  rejected
+  withdrawn
+  hired
+}
+
+enum ContractStatus {
+  pending
+  accepted
+  reSubmit
+}
+
+enum QuestionType {
+  coding
+  text
+}
+
+type TasksType {
+  title        String
+  questionType QuestionType @default(coding)
+  phrase       String
+  description  String
+  codeLanguage String?
+  code         String?
+  timelimit    String
+}
+
+type PersonalInformation {
+  fullName     String
+  phone        String
+  phoneCountry String
+  email        String
+  country      String
+  linkedin     String?
+  gender       String
+  website      String?
+}
+
+type EducationBackground {
+  school String
+  course String?
+  from   String
+  to     String
+}
+
+type WorkExperience {
+  company String
+  role    String?
+  from    String
+  to      String
+}
+
+type SkillsRating {
+  name  String
+  level Int
+}
+
+type AnsweredTasks {
+  uid         String
+  task        TasksType?
+  answer      String?
+  status      TaskStatus @default(pending)
+  startedTime DateTime?
+  remainTime  String?
+}
+
+enum TaskStatus {
+  pending
+  initiated
+  started
+  completed
+}

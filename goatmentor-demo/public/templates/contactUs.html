@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact us</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .logo {
+        display: block;
+        margin: 1rem auto;
+        object-fit: contain;
+      }
+
+      .name {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 500;
+        color: #4d4848;
+        width: 100%;
+        display: block;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: black;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 500;
+        color: #212121;
+      }
+
+      .button {
+        padding: 1rem 2rem;
+        background-color: #f4713b;
+        color: #ffffff !important;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        text-align: center;
+        width: 100%;
+        max-width: 30rem;
+        margin: 1rem 0;
+        display: block;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 2rem;
+        color: #616161;
+        font-weight: 600;
+      }
+
+      @media (max-width: 767px) {
+        .name {
+          font-size: 1.25rem;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+        p {
+          font-weight: 400;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      src="xxxxx"
+      class="logo"
+      alt="logo"
+      width="100px"
+      height="100px" />
+    <h1>Contact us</h1>
+    <p>Hello I am {firstname} {lastname}, my email is {email}</p>
+    <p>{message}</p>
+    <a href="mailto:{email}" class="button">Reply</a>
+    <footer>Copyright 2023 xxxxx</footer>
+  </body>
+</html>
